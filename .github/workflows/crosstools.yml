@@ -1,0 +1,44 @@
+name: Build crosstools
+on:
+  push:
+  pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  toolchain:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain: [ u16, win ]
+    container:
+      image: ubuntu:16.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        run: bash src/setup.sh
+      - name: Build ${{ matrix.toolchain }} toolchain
+        run: sudo --user builder bash src/build_toolchain.sh $PWD/src/configs/${{ matrix.toolchain }}.config
+      - name: Stash artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: /build/${{ matrix.toolchain }}.config.tar.xz
+      - name: Print logs
+        run: cat "/build/toolchains/${{ matrix.toolchain }}.config.d/build.log"
+        if: failure()
+  publish:
+    runs-on: ubuntu-latest
+    needs: [toolchain]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
+      - name: List artifacts
+        run: find ${{ github.workspace }} -type f
+      - name: Make release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "${{ github.workspace }}/artifact/*.tar.xz"
