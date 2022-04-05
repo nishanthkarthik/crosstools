@@ -3,7 +3,8 @@
 set -e
 
 apt update && apt upgrade --assume-yes
-apt install --assume-yes autoconf git make wget tree g++-5 flex bison texinfo bzip2 xz-utils unzip help2man file gawk libtool-bin libncurses5-dev sudo
+apt install --assume-yes autoconf git make wget tree g++-5 flex bison texinfo bzip2 xz-utils unzip help2man \
+                         file gawk libtool-bin libncurses5-dev sudo zstd
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
 update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
 

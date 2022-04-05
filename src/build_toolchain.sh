@@ -9,4 +9,4 @@ WORK_DIR="/build/toolchains/$CONFIG_NAME.d"
 mkdir --parents "$WORK_DIR" && cd "$WORK_DIR"
 cp "$CONFIG" $PWD/.config
 /build/ct-ng-bin/bin/ct-ng build
-tar -C $PWD/x-tools -cJf /build/$CONFIG_NAME.tar.xz .
+tar -I zstd -C $PWD/x-tools -caf /build/$CONFIG_NAME.tar.zstd .
