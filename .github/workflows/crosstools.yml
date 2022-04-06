@@ -22,7 +22,7 @@ jobs:
       - name: Stash artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: /build/${{ matrix.toolchain }}.config.tar.zstd
+          path: /build/${{ matrix.toolchain }}.config.tar.zst
       - name: Print logs
         run: cat "/build/toolchains/${{ matrix.toolchain }}.config.d/build.log"
         if: failure()
@@ -40,4 +40,4 @@ jobs:
       - name: Make release
         uses: softprops/action-gh-release@v1
         with:
-          files: "${{ github.workspace }}/artifact/*.tar.zstd"
+          files: "${{ github.workspace }}/artifact/*.tar.zst"
